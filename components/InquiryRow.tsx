@@ -8,7 +8,7 @@ import type { Inquiry, InquiryStatus } from "@/lib/types";
 
 interface InquiryRowProps {
   inquiry: Inquiry;
-  onUpdated: (rowId: number, updates: Partial<Inquiry>) => void;
+  onUpdated: (id: string, updates: Partial<Inquiry>) => void;
 }
 
 export default function InquiryRow({ inquiry, onUpdated }: InquiryRowProps) {
@@ -22,7 +22,7 @@ export default function InquiryRow({ inquiry, onUpdated }: InquiryRowProps) {
     setError("");
 
     try {
-      const response = await fetch(`/api/inquiries/${inquiry.rowId}`, {
+      const response = await fetch(`/api/inquiries/${inquiry.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -35,7 +35,7 @@ export default function InquiryRow({ inquiry, onUpdated }: InquiryRowProps) {
         return;
       }
 
-      onUpdated(inquiry.rowId, payload);
+      onUpdated(inquiry.id, payload);
     } catch {
       setError("서버 연결에 실패했습니다.");
     } finally {
@@ -59,7 +59,7 @@ export default function InquiryRow({ inquiry, onUpdated }: InquiryRowProps) {
         {inquiry.submittedAt}
       </td>
       <td className="px-4 py-4 text-sm font-medium text-deep-green">{inquiry.name}</td>
-      <td className="px-4 py-4 text-sm text-deep-green/70">{inquiry.age || "-"}</td>
+      <td className="px-4 py-4 text-sm text-deep-green/70">{inquiry.company || "-"}</td>
       <td className="px-4 py-4 text-sm text-deep-green">{inquiry.phone}</td>
       <td className="px-4 py-4 text-sm text-deep-green/70">{inquiry.email || "-"}</td>
       <td className="max-w-xs px-4 py-4 text-sm text-deep-green/80">

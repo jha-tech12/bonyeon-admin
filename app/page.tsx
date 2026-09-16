@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAuthenticated } from "@/lib/auth";
+import { isAuthenticated } from "@/lib/supabase/server";
 
 export default async function HomePage() {
   const authenticated = await isAuthenticated();

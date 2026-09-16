@@ -1,18 +1,26 @@
 import { NextResponse } from "next/server";
-import { updateInquiry } from "@/lib/gas-client";
+import { updateInquiry } from "@/lib/inquiries";
 import { INQUIRY_STATUSES } from "@/lib/constants";
+import { getAuthClaims } from "@/lib/supabase/server";
 import type { InquiryStatus } from "@/lib/types";
 
 interface RouteContext {
-  params: Promise<{ rowId: string }>;
+  params: Promise<{ id: string }>;
 }
 
-export async function PATCH(request: Request, context: RouteContext) {
-  const { rowId: rowIdParam } = await context.params;
-  const rowId = Number(rowIdParam);
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-  if (!Number.isInteger(rowId) || rowId < 2) {
-    return NextResponse.json({ success: false, error: "Invalid rowId" }, { status: 400 });
+export async function PATCH(request: Request, context: RouteContext) {
+  const user = await getAuthClaims();
+  if (!user) {
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await context.params;
+
+  if (!UUID_PATTERN.test(id)) {
+    return NextResponse.json({ success: false, error: "Invalid id" }, { status: 400 });
   }
 
   let body: { status?: InquiryStatus; notes?: string };
@@ -32,10 +40,11 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   try {
-    await updateInquiry(rowId, body);
+    await updateInquiry(id, body);
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "저장에 실패했습니다.";
-    return NextResponse.json({ success: false, error: message }, { status: 502 });
+    const status = message === "Row not found" ? 404 : 502;
+    return NextResponse.json({ success: false, error: message }, { status });
   }
 }

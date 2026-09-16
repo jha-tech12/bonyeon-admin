@@ -1,10 +1,10 @@
 export type InquiryStatus = "접수" | "확인" | "완료";
 
 export interface Inquiry {
-  rowId: number;
+  id: string;
   submittedAt: string;
   name: string;
-  age: string;
+  company: string;
   phone: string;
   email: string;
   message: string;

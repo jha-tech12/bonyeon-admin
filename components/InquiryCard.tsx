@@ -8,7 +8,7 @@ import type { Inquiry, InquiryStatus } from "@/lib/types";
 
 interface InquiryCardProps {
   inquiry: Inquiry;
-  onUpdated: (rowId: number, updates: Partial<Inquiry>) => void;
+  onUpdated: (id: string, updates: Partial<Inquiry>) => void;
 }
 
 export default function InquiryCard({ inquiry, onUpdated }: InquiryCardProps) {
@@ -22,7 +22,7 @@ export default function InquiryCard({ inquiry, onUpdated }: InquiryCardProps) {
     setError("");
 
     try {
-      const response = await fetch(`/api/inquiries/${inquiry.rowId}`, {
+      const response = await fetch(`/api/inquiries/${inquiry.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -35,7 +35,7 @@ export default function InquiryCard({ inquiry, onUpdated }: InquiryCardProps) {
         return;
       }
 
-      onUpdated(inquiry.rowId, payload);
+      onUpdated(inquiry.id, payload);
     } catch {
       setError("서버 연결에 실패했습니다.");
     } finally {
@@ -59,8 +59,8 @@ export default function InquiryCard({ inquiry, onUpdated }: InquiryCardProps) {
           <dd className="font-medium text-deep-green">{inquiry.phone}</dd>
         </div>
         <div>
-          <dt className="text-deep-green/50">나이</dt>
-          <dd className="text-deep-green">{inquiry.age || "-"}</dd>
+          <dt className="text-deep-green/50">회사</dt>
+          <dd className="text-deep-green">{inquiry.company || "-"}</dd>
         </div>
         <div className="col-span-2">
           <dt className="text-deep-green/50">이메일</dt>

@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
-import { fetchInquiries } from "@/lib/gas-client";
+import { fetchInquiries } from "@/lib/inquiries";
+import { getAuthClaims } from "@/lib/supabase/server";
 
 export async function GET() {
+  const user = await getAuthClaims();
+  if (!user) {
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const inquiries = await fetchInquiries();
     return NextResponse.json({ success: true, inquiries });

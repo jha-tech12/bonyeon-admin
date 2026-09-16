@@ -63,9 +63,9 @@ export default function InquiryDashboard() {
     };
   }, [inquiries]);
 
-  const handleUpdated = (rowId: number, updates: Partial<Inquiry>) => {
+  const handleUpdated = (id: string, updates: Partial<Inquiry>) => {
     setInquiries((prev) =>
-      prev.map((item) => (item.rowId === rowId ? { ...item, ...updates } : item)),
+      prev.map((item) => (item.id === id ? { ...item, ...updates } : item)),
     );
   };
 
@@ -135,7 +135,7 @@ export default function InquiryDashboard() {
           <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
             {error}
             <p className="mt-2 text-xs text-red-600/80">
-              Apps Script에 ADMIN_API_KEY가 설정되어 있는지, GAS 코드가 최신 버전으로 배포되었는지 확인해 주세요.
+              Supabase 키와 inquiries 테이블이 준비되어 있는지 확인해 주세요.
             </p>
           </div>
         )}
@@ -155,7 +155,7 @@ export default function InquiryDashboard() {
                     <tr>
                       <th className="px-4 py-3">접수일시</th>
                       <th className="px-4 py-3">성함</th>
-                      <th className="px-4 py-3">나이</th>
+                      <th className="px-4 py-3">회사</th>
                       <th className="px-4 py-3">연락처</th>
                       <th className="px-4 py-3">이메일</th>
                       <th className="px-4 py-3">문의사항</th>
@@ -166,7 +166,7 @@ export default function InquiryDashboard() {
                   <tbody>
                     {filteredInquiries.map((inquiry) => (
                       <InquiryRow
-                        key={inquiry.rowId}
+                        key={inquiry.id}
                         inquiry={inquiry}
                         onUpdated={handleUpdated}
                       />
@@ -179,7 +179,7 @@ export default function InquiryDashboard() {
             <div className="grid gap-4 lg:hidden">
               {filteredInquiries.map((inquiry) => (
                 <InquiryCard
-                  key={inquiry.rowId}
+                  key={inquiry.id}
                   inquiry={inquiry}
                   onUpdated={handleUpdated}
                 />

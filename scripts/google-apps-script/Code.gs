@@ -37,7 +37,7 @@ function handleCreate(data) {
   sheet.appendRow([
     new Date(),
     data.name || "",
-    data.age || "",
+    data.company || "",
     data.phone || "",
     data.email || "",
     data.message || "",
@@ -66,7 +66,7 @@ function handleList(data) {
       rowId: i + 1,
       submittedAt: formatDate(row[0]),
       name: String(row[1] || ""),
-      age: String(row[2] || ""),
+      company: String(row[2] || ""),
       phone: String(row[3] || ""),
       email: String(row[4] || ""),
       message: String(row[5] || ""),
